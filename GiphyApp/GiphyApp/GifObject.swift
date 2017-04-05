@@ -11,12 +11,10 @@ import UIKit
 
 struct GifObject {
     var URL: String = ""
-    var imageData: UIImage?
     var everTrended: Bool
     
-    init(_ URL: String,_ imageData:UIImage,_ everTrended: Bool ) {
+    init(_ URL: String, _ everTrended: Bool ) {
         self.URL = URL
-        self.imageData = imageData
         self.everTrended = everTrended
     }
     

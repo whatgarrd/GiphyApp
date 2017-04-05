@@ -35,6 +35,10 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
         tableView.delegate = self
         tableView.dataSource = self
         
+        
+        //register custom cell
+        self.tableView.register(CustomCell.self, forCellReuseIdentifier: "Cell")
+        
         // UI setup
         UITableView.appearance().separatorColor = UIColor.black
         loadingGifsIndicator.hidesWhenStopped = true
@@ -78,16 +82,17 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
 
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell : UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as UITableViewCell
+        let cell : CustomCell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomCell
         
-        cell.imageView?.image = nil
-        cell.textLabel?.text = ""
+
+        let placeholderImage = UIImage(named: "placeholder")!
         
-        if ( self.searchQueryGifStorage.gifObjectsArray[indexPath.section].imageData != nil){
-            cell.imageView?.image = self.searchQueryGifStorage.gifObjectsArray[indexPath.section].imageData
-        }
+        let url = URL(string: self.searchQueryGifStorage.gifObjectsArray[indexPath.section].URL)!
         
-        /* if ever trended */
+        cell.whateverImageView.af_setImage(withURL: url, placeholderImage: placeholderImage)
+        
+        
+        // if ever trended
         if (self.searchQueryGifStorage.gifObjectsArray[indexPath.section].everTrended == true){
             cell.textLabel?.text = self.trendedMarker
         }

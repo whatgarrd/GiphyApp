@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftGifOrigin
+import SwiftyJSON
 
 class SearchQueryGifStorage{
     
@@ -44,45 +45,53 @@ class SearchQueryGifStorage{
                 print(error as Any)
                 return
             }
-            guard let data = data else {
+            guard let dataFromNetworking = data else {
                 print("Data is empty")
                 return
             }
             
             // Parsing JSON
-            let json = try! JSONSerialization.jsonObject(with: data, options: [])  as! [String:Any]
             
 
             for counter in 0 ..< self.limit {
-                let JSONDataArray = json["data"] as! [[String : Any]]
-                // prevent IndexOutOfRange error
-                if (JSONDataArray.count - 1 < counter){
-                    break
-                }
-                let JSONDataObject = JSONDataArray[counter]
-                let JSONImagesObject = JSONDataObject["images"] as! [String:Any]
-                let JSONFixedWidthObject = JSONImagesObject["fixed_width"] as! [String:Any]
                 
-                let JSONTrendingDatetime = JSONDataObject["trending_datetime"] as! String
-
+                let json = JSON(data: dataFromNetworking)
+                
+                
                 var everTrended = false
-                if((JSONTrendingDatetime != "1970-01-01 00:00:00") && (JSONTrendingDatetime != "0000-00-00 00:00:00")){
-                    everTrended = true
+                
+                let everTrendedPath: [JSONSubscriptType] = ["data",counter, "trending_datetime"]
+                let urlPath: [JSONSubscriptType] = ["data", counter, "images", "fixed_width", "url"]
+                
+                // everTrended parse
+                if let everTrendedJSON = json[everTrendedPath].string {
+                    if(everTrendedJSON != "1970-01-01 00:00:00"){
+                        everTrended = true
+                    }
+                    
+                } else {
+                    print ("seems like everTrended parse had failed")
                 }
                 
-                if let url = JSONFixedWidthObject["url"] as? String {
-
+                
+                // URL parse
+                if let url = json[urlPath].string {
+                    
                     // retrieving image by url
-                    let imageData =  try! Data(contentsOf: URL(string:url)!)
+                    //let imageData =  try! Data(contentsOf: URL(string:url)!)
                     
                     // creating and filling GifObject with parsed information
-                    let justAnotherGifObject = GifObject(url, UIImage.gif(data: imageData)!, everTrended)
+                    let justAnotherGifObject = GifObject(url, everTrended)
                     
                     // storing GifObject in array
                     self.gifObjectsArray.append(justAnotherGifObject)
+                    
+                } else {
+                    print("seems like url parse had failed")
                 }
+                
+                
             }
-        
             self.downloadGroup.leave()
             
             // API parameter update

@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftGifOrigin
+import AlamofireImage
 
 class MainViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     
@@ -34,6 +35,9 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.delegate = self
         tableView.dataSource = self
         searchBar.delegate = self
+        
+        //register custom cell
+        self.tableView.register(CustomCell.self, forCellReuseIdentifier: "Cell")
 
 
         // UI setup
@@ -59,14 +63,16 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         return self.numberOfRowsInSection
     }
     
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell : UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as UITableViewCell
         
-        cell.imageView?.image = nil
+        let cell : CustomCell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomCell
         
-        if ( self.trendingGifsStorage.gifObjectsArray[indexPath.section].imageData != nil){
-            cell.imageView?.image = self.trendingGifsStorage.gifObjectsArray[indexPath.section].imageData
-        }
+        let placeholderImage = UIImage(named: "placeholder")!
+        
+        let url = URL(string: self.trendingGifsStorage.gifObjectsArray[indexPath.section].URL)!
+   
+        cell.whateverImageView.af_setImage(withURL: url, placeholderImage: placeholderImage)
         
         return cell
     }
