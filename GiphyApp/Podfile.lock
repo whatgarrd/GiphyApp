@@ -1,12 +1,21 @@
 PODS:
+  - Alamofire (4.4.0)
+  - AlamofireImage (3.2.0):
+    - Alamofire (~> 4.1)
   - SwiftGifOrigin (1.6.1)
+  - SwiftyJSON (3.1.4)
 
 DEPENDENCIES:
+  - AlamofireImage (~> 3.1)
   - SwiftGifOrigin (~> 1.6.1)
+  - SwiftyJSON
 
 SPEC CHECKSUMS:
+  Alamofire: dc44b1600b800eb63da6a19039a0083d62a6a62d
+  AlamofireImage: 157ed682cc81d3b9db4fb90c1f12180ac552d93b
   SwiftGifOrigin: d6679d3ebe9df2e049a84bc52582635107b581f6
+  SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
 
-PODFILE CHECKSUM: 3a11ed05251a106e818ee9227ac4cd296f3cb711
+PODFILE CHECKSUM: e6d3904ab0bc22d9c3c28c056f9fb7b5bcfe3c1b
 
 COCOAPODS: 1.2.0
