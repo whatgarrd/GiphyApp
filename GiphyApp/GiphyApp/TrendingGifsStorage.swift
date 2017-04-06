@@ -10,7 +10,7 @@ import UIKit
 import SwiftGifOrigin
 import SwiftyJSON
 
-class TrendingGifsStorage{
+class TrendingGifsStorage {
     
     var gifObjectsArray = [GifObject]()
     
@@ -26,13 +26,11 @@ class TrendingGifsStorage{
     private let updateSpeed: Int = 5
     
     func loadGifs(){
-        
-        self.busy = true
-        
-        self.downloadGroup.enter()
+        busy = true
+        downloadGroup.enter()
         
         // asking api.giphy.com for images / using public key
-        guard let url = URL(string: "http://api.giphy.com/v1/stickers/trending?api_key=dc6zaTOxFJmzC&limit=\(self.limit)&offset=\(self.offset)")
+        guard let url = URL(string: "http://api.giphy.com/v1/stickers/trending?api_key=dc6zaTOxFJmzC&limit=\(limit)&offset=\(offset)")
             else {
                 return
             }
@@ -42,18 +40,15 @@ class TrendingGifsStorage{
                 print(error as Any)
                 return
             }
-            guard let dataFromNetworking = data else {
+            guard let data = data else {
                 print("Data is empty")
                 return
             }
             
             // Parsing JSON
-            
             for counter in 0 ..< self.limit {
-                
-                let json = JSON(data: dataFromNetworking)
+                let json = JSON(data: data)
 
-                
                 var everTrended = false
              
                 let everTrendedPath: [JSONSubscriptType] = ["data",counter, "trending_datetime"]
@@ -61,32 +56,23 @@ class TrendingGifsStorage{
                 
                 // everTrended parse
                 if let everTrendedJSON = json[everTrendedPath].string {
-                    if(everTrendedJSON != "1970-01-01 00:00:00"){
+                    if(everTrendedJSON != "1970-01-01 00:00:00") {
                         everTrended = true
                     }
-                    
                 } else {
                     print ("seems like everTrended parse had failed")
                 }
                 
-                
                 // URL parse
                 if let url = json[urlPath].string {
-                    
-                    // retrieving image by url
-                    //let imageData =  try! Data(contentsOf: URL(string:url)!)
-                    
                     // creating and filling GifObject with parsed information
                     let justAnotherGifObject = GifObject(url, everTrended)
                     
                     // storing GifObject in array
                     self.gifObjectsArray.append(justAnotherGifObject)
-                    
                 } else {
                     print("seems like url parse had failed")
                 }
-                
-             
             }
             self.downloadGroup.leave()
             
@@ -97,12 +83,10 @@ class TrendingGifsStorage{
         
         let _ = downloadGroup.wait(timeout: DispatchTime.distantFuture)
         
-        self.busy = false
+        busy = false
     }
     
     func isBusy() -> Bool{
-        return self.busy
+        return busy
     }
-    
 }
-

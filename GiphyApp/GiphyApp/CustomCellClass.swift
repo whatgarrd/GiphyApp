@@ -6,37 +6,29 @@
 //  Copyright © 2017 Владислав Шарандин. All rights reserved.
 //
 
-import Foundation
-
-import AlamofireImage
 import UIKit
 
-class CustomCell : UITableViewCell {
+class gifContainerCell: UITableViewCell {
     
-    var whateverImageView = UIImageView()
+    var innerImageView = UIImageView()
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        whateverImageView.contentMode = .scaleAspectFit
+        innerImageView.contentMode = .scaleAspectFit
+        innerImageView.translatesAutoresizingMaskIntoConstraints = false
         
-        whateverImageView.translatesAutoresizingMaskIntoConstraints = false
-        
-        self.addSubview(whateverImageView)
+        addSubview(innerImageView)
         
         NSLayoutConstraint.activate([
-            whateverImageView.rightAnchor.constraint(equalTo: self.rightAnchor),
-            whateverImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            whateverImageView.leftAnchor.constraint(equalTo: self.leftAnchor),
-            whateverImageView.topAnchor.constraint(equalTo: self.topAnchor),
-            
+            innerImageView.rightAnchor.constraint(equalTo: self.rightAnchor),
+            innerImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            innerImageView.leftAnchor.constraint(equalTo: self.leftAnchor),
+            innerImageView.topAnchor.constraint(equalTo: self.topAnchor),
             ])
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-
 }

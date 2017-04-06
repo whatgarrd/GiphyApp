@@ -10,6 +10,7 @@ import UIKit
 
 
 struct GifObject {
+    
     var URL: String = ""
     var everTrended: Bool
     

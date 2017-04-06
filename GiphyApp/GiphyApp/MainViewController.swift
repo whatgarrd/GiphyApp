@@ -17,16 +17,17 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var loadingGifsIndicator: UIActivityIndicatorView!
     
     // constants
-    let numberOfRowsInSection : Int = 1
-    let heightForRowAt : CGFloat = 240.0
-    let heightForFooterInSection : CGFloat = 30.0
+    let numberOfRowsInSection: Int = 1
+    let heightForRowAt: CGFloat = 240.0
+    let heightForFooterInSection: CGFloat = 30.0
     let titleString: String = "Trending"
-    let searchGifsSegueIdentifier = "GoToSearch"
+    let searchGifsSegueIdentifier: String = "GoToSearch"
+    let forCellReuseIdentifier: String = "Cell"
+    let placeholderName: String = "placeholder"
     
     // object which have an array which stores trending gifs as GifObjects
     // also it performs updating of this array
     let trendingGifsStorage = TrendingGifsStorage()
- 
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,17 +38,15 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         searchBar.delegate = self
         
         //register custom cell
-        self.tableView.register(CustomCell.self, forCellReuseIdentifier: "Cell")
-
+        tableView.register(gifContainerCell.self, forCellReuseIdentifier: forCellReuseIdentifier)
 
         // UI setup
         UITableView.appearance().separatorColor = UIColor.black
         loadingGifsIndicator.hidesWhenStopped = true
-        self.title = titleString
+        title = titleString
         
         // first update
         updateGifs()
-  
     }
 
     override func didReceiveMemoryWarning() {
@@ -56,33 +55,31 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func numberOfSections(in tableView: UITableView) -> Int {
         // array of UIImages in gifStorage
-        return self.trendingGifsStorage.gifObjectsArray.count
+        return trendingGifsStorage.gifObjectsArray.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.numberOfRowsInSection
+        return numberOfRowsInSection
     }
     
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell : CustomCell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CustomCell
-        
-        let placeholderImage = UIImage(named: "placeholder")!
-        
-        let url = URL(string: self.trendingGifsStorage.gifObjectsArray[indexPath.section].URL)!
-   
-        cell.whateverImageView.af_setImage(withURL: url, placeholderImage: placeholderImage)
+        let cell: gifContainerCell = tableView.dequeueReusableCell(withIdentifier: forCellReuseIdentifier, for: indexPath) as! gifContainerCell
+        let placeholderImage = UIImage(named: placeholderName)
+        guard let url = URL(string: trendingGifsStorage.gifObjectsArray[indexPath.section].URL) else {
+            return cell
+        }
+
+        cell.innerImageView.af_setImage(withURL: url, placeholderImage: placeholderImage)
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return self.heightForRowAt
+        return heightForRowAt
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return self.heightForFooterInSection
+        return heightForFooterInSection
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
@@ -109,8 +106,8 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         // when we reach the bottom of the screen
         if tableView.contentOffset.y >= (tableView.contentSize.height - tableView.frame.size.height) {
-            if (!self.trendingGifsStorage.isBusy()) {
-                self.updateGifs()
+            if !trendingGifsStorage.isBusy() {
+                updateGifs()
             }
         }
     }
@@ -133,12 +130,12 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if(segue.identifier == searchGifsSegueIdentifier) {
-            let SearchGifsViewController = (segue.destination as! SearchGifsViewController)
-            SearchGifsViewController.searchQuery  = self.searchBar.text!
+        if segue.identifier == searchGifsSegueIdentifier {
+            let searchGifsViewController = segue.destination as! SearchGifsViewController
+            if searchBar.text != nil {
+                searchGifsViewController.searchQuery = searchBar.text!
+            }
         }
     }
 }
-

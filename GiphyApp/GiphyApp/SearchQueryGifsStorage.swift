@@ -10,7 +10,7 @@ import UIKit
 import SwiftGifOrigin
 import SwiftyJSON
 
-class SearchQueryGifStorage{
+class SearchQueryGifStorage {
     
     var gifObjectsArray = [GifObject]()
     
@@ -18,24 +18,22 @@ class SearchQueryGifStorage{
     
     private var busy = false
     
-    /* giphy.com API parameters */
+    // giphy.com API parameters
     private let limit: Int = 5
     private var offset: Int = 0
     private var query: String = ""
     private var rating: String = "pg"
     
-    /* after each update offset += updateSpeed */
+    // after each update offset += updateSpeed
     private let updateSpeed: Int = 5
     
-    
     func loadGifs(){
-        
         self.busy = true
         
         self.downloadGroup.enter()
         
         // asking api.giphy.com for images / using public key
-        guard let url = URL(string: "http://api.giphy.com/v1/stickers/search?q=\(self.query)&api_key=dc6zaTOxFJmzC&limit=\(self.limit)&offset=\(self.offset)&rating=\(self.rating)")
+        guard let url = URL(string: "http://api.giphy.com/v1/stickers/search?q=\(query)&api_key=dc6zaTOxFJmzC&limit=\(limit)&offset=\(offset)&rating=\(rating)")
             else {
                 return
             }
@@ -45,18 +43,14 @@ class SearchQueryGifStorage{
                 print(error as Any)
                 return
             }
-            guard let dataFromNetworking = data else {
+            guard let data = data else {
                 print("Data is empty")
                 return
             }
             
             // Parsing JSON
-            
-
             for counter in 0 ..< self.limit {
-                
-                let json = JSON(data: dataFromNetworking)
-                
+                let json = JSON(data: data)
                 
                 var everTrended = false
                 
@@ -65,7 +59,7 @@ class SearchQueryGifStorage{
                 
                 // everTrended parse
                 if let everTrendedJSON = json[everTrendedPath].string {
-                    if(everTrendedJSON != "1970-01-01 00:00:00"){
+                    if everTrendedJSON != "1970-01-01 00:00:00" {
                         everTrended = true
                     }
                     
@@ -73,24 +67,16 @@ class SearchQueryGifStorage{
                     print ("seems like everTrended parse had failed")
                 }
                 
-                
                 // URL parse
                 if let url = json[urlPath].string {
-                    
-                    // retrieving image by url
-                    //let imageData =  try! Data(contentsOf: URL(string:url)!)
-                    
                     // creating and filling GifObject with parsed information
                     let justAnotherGifObject = GifObject(url, everTrended)
                     
                     // storing GifObject in array
                     self.gifObjectsArray.append(justAnotherGifObject)
-                    
                 } else {
                     print("seems like url parse had failed")
                 }
-                
-                
             }
             self.downloadGroup.leave()
             
@@ -100,11 +86,11 @@ class SearchQueryGifStorage{
         task.resume()
         
         let _ = downloadGroup.wait(timeout: DispatchTime.distantFuture)
-        self.busy = false
+        busy = false
     }
     
     func isBusy() -> Bool{
-        return self.busy
+        return busy
     }
 
     func setQuery(_ query: String){
