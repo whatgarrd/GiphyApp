@@ -7,7 +7,12 @@
 //
 
 import UIKit
-import SwiftGifOrigin
+import Gifu
+
+import Nuke
+import NukeGifuPlugin
+
+
 
 class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
@@ -84,12 +89,13 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: gifContainerCell = tableView.dequeueReusableCell(withIdentifier: forCellReuseIdentifier, for: indexPath) as! gifContainerCell
-        let placeholderImage = UIImage(named: placeholderName)!
-        guard let url = URL(string: searchQueryGifStorage.gifObjectsArray[indexPath.section].URL) else {
-            return cell
-        }
         
-        cell.innerImageView.af_setImage(withURL: url, placeholderImage: placeholderImage)
+        let urlString = searchQueryGifStorage.gifObjectsArray[indexPath.section].URL
+        
+        //if we can access
+        if URLValidator.verifyUrl(urlString: urlString) {
+            AnimatedImage.manager.loadImage(with: URL(string: urlString)!, into: cell.innerImageView)
+        }
         
         // if ever trended
         if searchQueryGifStorage.gifObjectsArray[indexPath.section].everTrended == true {

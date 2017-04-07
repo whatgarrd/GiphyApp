@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import SwiftGifOrigin
+
 import SwiftyJSON
 
 class TrendingGifsStorage {

@@ -7,8 +7,10 @@
 //
 
 import UIKit
-import SwiftGifOrigin
-import AlamofireImage
+import Gifu
+
+import Nuke
+import NukeGifuPlugin
 
 class MainViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     
@@ -64,13 +66,13 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: gifContainerCell = tableView.dequeueReusableCell(withIdentifier: forCellReuseIdentifier, for: indexPath) as! gifContainerCell
-        let placeholderImage = UIImage(named: placeholderName)
-        guard let url = URL(string: trendingGifsStorage.gifObjectsArray[indexPath.section].URL) else {
-            return cell
-        }
-
-        cell.innerImageView.af_setImage(withURL: url, placeholderImage: placeholderImage)
         
+        let urlString = trendingGifsStorage.gifObjectsArray[indexPath.section].URL
+   
+        //if we can access
+        if URLValidator.verifyUrl(urlString: urlString) {
+            AnimatedImage.manager.loadImage(with: URL(string: urlString)!, into: cell.innerImageView)
+        }
         return cell
     }
     

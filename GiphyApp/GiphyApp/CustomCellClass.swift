@@ -8,9 +8,14 @@
 
 import UIKit
 
+import Nuke
+import NukeGifuPlugin
+
 class gifContainerCell: UITableViewCell {
+
+    private let placeholderName: String = "placeholder"
     
-    var innerImageView = UIImageView()
+    var innerImageView = AnimatedImageView()
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -30,5 +35,11 @@ class gifContainerCell: UITableViewCell {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        innerImageView.prepareForReuse()
     }
 }

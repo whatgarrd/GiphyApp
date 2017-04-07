@@ -1,21 +1,23 @@
 PODS:
-  - Alamofire (4.4.0)
-  - AlamofireImage (3.2.0):
-    - Alamofire (~> 4.1)
-  - SwiftGifOrigin (1.6.1)
+  - Gifu (2.0.0)
+  - Nuke (5.1)
+  - Nuke-Gifu-Plugin (1.0):
+    - Gifu (~> 2.0)
+    - Nuke (~> 5.0)
   - SwiftyJSON (3.1.4)
 
 DEPENDENCIES:
-  - AlamofireImage (~> 3.1)
-  - SwiftGifOrigin (~> 1.6.1)
+  - Gifu
+  - Nuke (~> 5.0)
+  - Nuke-Gifu-Plugin
   - SwiftyJSON
 
 SPEC CHECKSUMS:
-  Alamofire: dc44b1600b800eb63da6a19039a0083d62a6a62d
-  AlamofireImage: 157ed682cc81d3b9db4fb90c1f12180ac552d93b
-  SwiftGifOrigin: d6679d3ebe9df2e049a84bc52582635107b581f6
+  Gifu: 56a4d8f1092399159fa32662aa2232158b48d8ac
+  Nuke: 8ab71e77f6a54ff5fb697f93537c35f419bb01f7
+  Nuke-Gifu-Plugin: 212968cf0c170a504a8ddf69806cf6c6aa2f40b4
   SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
 
-PODFILE CHECKSUM: e6d3904ab0bc22d9c3c28c056f9fb7b5bcfe3c1b
+PODFILE CHECKSUM: 4eb602fbb79c340ea4a2d9f2d980f958e639a1b6
 
 COCOAPODS: 1.2.0
