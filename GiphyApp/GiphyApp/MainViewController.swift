@@ -11,22 +11,69 @@ import NukeGifuPlugin
 
 class MainViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     
-    @IBOutlet weak var searchBar: UISearchBar!
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var loadingGifsIndicator: UIActivityIndicatorView!
+    var tableView = UITableView()
+    var searchBar = UISearchBar()
+    var loadingGifsIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+    let footerView = UIView(frame: CGRect.zero)
+    let dummyFooterView = UIView(frame: CGRect.zero)
     
     // constants
     let numberOfRowsInSection: Int = 1
     let heightForRowAt: CGFloat = 240.0
     let heightForFooterInSection: CGFloat = 30.0
     let titleString: String = "Trending"
-    let searchGifsSegueIdentifier: String = "GoToSearch"
+    let searchGifsSegueIdentifier: String = "Search"
     let forCellReuseIdentifier: String = "Cell"
+    let viewTopAnchorConst: CGFloat = 20.0
+    let viewBottomAnchorConst: CGFloat = 70.0
     
     // object which have an array which stores trending gifs as GifObjects
     // also it performs updating of this array
     let trendingGifsStorage = TrendingGifsStorage()
 
+    override func loadView() {
+        super.loadView()
+        
+        //preset
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        loadingGifsIndicator.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(searchBar)
+        tableView.addSubview(loadingGifsIndicator)
+        view.addSubview(tableView)
+        
+        //searchBar setup
+        NSLayoutConstraint.activate([
+            searchBar.topAnchor.constraint(equalTo: view.topAnchor, constant: viewTopAnchorConst),
+            searchBar.leftAnchor.constraint(equalTo: view.leftAnchor),
+            searchBar.rightAnchor.constraint(equalTo: view.rightAnchor),
+            searchBar.bottomAnchor.constraint(equalTo: view.topAnchor, constant: viewBottomAnchorConst)
+            
+        ])
+        
+        //tableView setup
+        NSLayoutConstraint.activate([
+            tableView.rightAnchor.constraint(equalTo: view.rightAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            tableView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            tableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
+        ])
+        
+        tableView.allowsSelection = false
+        
+        //footerView setup
+        footerView.addSubview(loadingGifsIndicator)
+        
+        //loadingGifsIndicator setup
+        loadingGifsIndicator.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            loadingGifsIndicator.centerXAnchor.constraint(equalTo: footerView.centerXAnchor),
+            loadingGifsIndicator.centerYAnchor.constraint(equalTo: footerView.centerYAnchor)
+        ])
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -38,7 +85,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         //register custom cell
         tableView.register(GifContainerCell.self, forCellReuseIdentifier: forCellReuseIdentifier)
 
-        // UI setup
+        // additional UI setup
         UITableView.appearance().separatorColor = UIColor.black
         loadingGifsIndicator.hidesWhenStopped = true
         title = titleString
@@ -78,11 +125,12 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        // footer setup
-        let footerView = UIView()
-        footerView.backgroundColor = UIColor.white
-        
-        return footerView
+        //last section
+        if section == tableView.numberOfSections - 1 {
+            return footerView
+        } else {
+            return dummyFooterView
+        }
     }
 
     func updateGifs() {
