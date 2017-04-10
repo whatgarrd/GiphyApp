@@ -64,7 +64,11 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cell: GifContainerCell = tableView.dequeueReusableCell(withIdentifier: forCellReuseIdentifier, for: indexPath) as! GifContainerCell
         let urlString = trendingGifsStorage.gifObjectsArray[indexPath.section].URL
         
-        AnimatedImage.manager.loadImage(with: URL(string: urlString)!, into: cell.innerImageView)
+        guard let imageURL = URL(string: urlString) else {
+            return cell
+        }
+        
+        AnimatedImage.manager.loadImage(with: imageURL, into: cell.innerImageView)
 
         return cell
     }

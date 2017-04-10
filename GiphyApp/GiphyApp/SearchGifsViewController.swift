@@ -85,7 +85,11 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
         let cell: GifContainerCell = tableView.dequeueReusableCell(withIdentifier: forCellReuseIdentifier, for: indexPath) as! GifContainerCell
         let urlString = searchQueryGifStorage.gifObjectsArray[indexPath.section].URL
         
-        AnimatedImage.manager.loadImage(with: URL(string: urlString)!, into: cell.innerImageView)
+        guard let imageURL = URL(string: urlString) else {
+            return cell
+        }
+
+        AnimatedImage.manager.loadImage(with: imageURL, into: cell.innerImageView)
         
         // if ever trended
         if searchQueryGifStorage.gifObjectsArray[indexPath.section].everTrended == true {
