@@ -7,8 +7,7 @@
 //
 
 import UIKit
-import SwiftGifOrigin
-import AlamofireImage
+import NukeGifuPlugin
 
 class MainViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     
@@ -23,7 +22,6 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     let titleString: String = "Trending"
     let searchGifsSegueIdentifier: String = "GoToSearch"
     let forCellReuseIdentifier: String = "Cell"
-    let placeholderName: String = "placeholder"
     
     // object which have an array which stores trending gifs as GifObjects
     // also it performs updating of this array
@@ -38,7 +36,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         searchBar.delegate = self
         
         //register custom cell
-        tableView.register(gifContainerCell.self, forCellReuseIdentifier: forCellReuseIdentifier)
+        tableView.register(GifContainerCell.self, forCellReuseIdentifier: forCellReuseIdentifier)
 
         // UI setup
         UITableView.appearance().separatorColor = UIColor.black
@@ -63,14 +61,15 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: gifContainerCell = tableView.dequeueReusableCell(withIdentifier: forCellReuseIdentifier, for: indexPath) as! gifContainerCell
-        let placeholderImage = UIImage(named: placeholderName)
-        guard let url = URL(string: trendingGifsStorage.gifObjectsArray[indexPath.section].URL) else {
+        let cell: GifContainerCell = tableView.dequeueReusableCell(withIdentifier: forCellReuseIdentifier, for: indexPath) as! GifContainerCell
+        let urlString = trendingGifsStorage.gifObjectsArray[indexPath.section].URL
+        
+        guard let imageURL = URL(string: urlString) else {
             return cell
         }
-
-        cell.innerImageView.af_setImage(withURL: url, placeholderImage: placeholderImage)
         
+        AnimatedImage.manager.loadImage(with: imageURL, into: cell.innerImageView)
+
         return cell
     }
     
@@ -90,7 +89,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         return footerView
     }
 
-    func updateGifs(){
+    func updateGifs() {
         DispatchQueue.global(qos: .background).async {
             self.indicatorStartSpinning()
             self.trendingGifsStorage.loadGifs()

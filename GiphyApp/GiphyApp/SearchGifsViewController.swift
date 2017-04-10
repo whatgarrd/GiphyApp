@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import SwiftGifOrigin
+import NukeGifuPlugin
 
 class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
@@ -37,7 +37,7 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
         tableView.dataSource = self
         
         //register custom cell
-        tableView.register(gifContainerCell.self, forCellReuseIdentifier: forCellReuseIdentifier)
+        tableView.register(GifContainerCell.self, forCellReuseIdentifier: forCellReuseIdentifier)
         
         // UI setup
         UITableView.appearance().separatorColor = UIColor.black
@@ -81,15 +81,15 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
         return footerView
     }
 
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: gifContainerCell = tableView.dequeueReusableCell(withIdentifier: forCellReuseIdentifier, for: indexPath) as! gifContainerCell
-        let placeholderImage = UIImage(named: placeholderName)!
-        guard let url = URL(string: searchQueryGifStorage.gifObjectsArray[indexPath.section].URL) else {
+        let cell: GifContainerCell = tableView.dequeueReusableCell(withIdentifier: forCellReuseIdentifier, for: indexPath) as! GifContainerCell
+        let urlString = searchQueryGifStorage.gifObjectsArray[indexPath.section].URL
+        
+        guard let imageURL = URL(string: urlString) else {
             return cell
         }
-        
-        cell.innerImageView.af_setImage(withURL: url, placeholderImage: placeholderImage)
+
+        AnimatedImage.manager.loadImage(with: imageURL, into: cell.innerImageView)
         
         // if ever trended
         if searchQueryGifStorage.gifObjectsArray[indexPath.section].everTrended == true {

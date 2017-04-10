@@ -6,9 +6,6 @@
 //  Copyright © 2017 Владислав Шарандин. All rights reserved.
 //
 
-import UIKit
-
-
 struct GifObject {
     
     var URL: String = ""
@@ -18,5 +15,4 @@ struct GifObject {
         self.URL = URL
         self.everTrended = everTrended
     }
-    
 }
