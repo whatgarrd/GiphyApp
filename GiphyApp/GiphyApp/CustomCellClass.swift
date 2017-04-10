@@ -7,14 +7,10 @@
 //
 
 import UIKit
-
-import Nuke
 import NukeGifuPlugin
 
-class gifContainerCell: UITableViewCell {
+class GifContainerCell: UITableViewCell {
 
-    private let placeholderName: String = "placeholder"
-    
     var innerImageView = AnimatedImageView()
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {

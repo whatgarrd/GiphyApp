@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		7B36E5301E93C7D90049CA7A /* CustomCellClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B36E52F1E93C7D90049CA7A /* CustomCellClass.swift */; };
-		7BF8F4ED1E97A78200503B26 /* URLValidatorClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF8F4EC1E97A78200503B26 /* URLValidatorClass.swift */; };
 		917573F728DAB41CBBBA9714 /* Pods_GiphyApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7083534164A91FA5C1C6146B /* Pods_GiphyApp.framework */; };
 		ED13F4091E65851F00E8E470 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED13F4081E65851F00E8E470 /* AppDelegate.swift */; };
 		ED13F40B1E65851F00E8E470 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED13F40A1E65851F00E8E470 /* MainViewController.swift */; };
@@ -24,7 +23,6 @@
 /* Begin PBXFileReference section */
 		7083534164A91FA5C1C6146B /* Pods_GiphyApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GiphyApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B36E52F1E93C7D90049CA7A /* CustomCellClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCellClass.swift; sourceTree = "<group>"; };
-		7BF8F4EC1E97A78200503B26 /* URLValidatorClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLValidatorClass.swift; sourceTree = "<group>"; };
 		8C600A9D970177726366CA31 /* Pods-GiphyApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GiphyApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GiphyApp/Pods-GiphyApp.debug.xcconfig"; sourceTree = "<group>"; };
 		ED13F4051E65851F00E8E470 /* GiphyApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GiphyApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED13F4081E65851F00E8E470 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -96,7 +94,6 @@
 				EDBE13571E65AB0900E847E7 /* SearchGifsViewController.swift */,
 				EDBE13551E65AA0900E847E7 /* SearchQueryGifsStorage.swift */,
 				ED13F41A1E658AA400E8E470 /* GifObject.swift */,
-				7BF8F4EC1E97A78200503B26 /* URLValidatorClass.swift */,
 				ED13F41C1E658AEA00E8E470 /* TrendingGifsStorage.swift */,
 				ED13F40C1E65851F00E8E470 /* Main.storyboard */,
 				ED13F40F1E65851F00E8E470 /* Assets.xcassets */,
@@ -230,7 +227,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				ED13F40B1E65851F00E8E470 /* MainViewController.swift in Sources */,
-				7BF8F4ED1E97A78200503B26 /* URLValidatorClass.swift in Sources */,
 				ED13F4091E65851F00E8E470 /* AppDelegate.swift in Sources */,
 				EDBE13561E65AA0900E847E7 /* SearchQueryGifsStorage.swift in Sources */,
 				ED13F41D1E658AEA00E8E470 /* TrendingGifsStorage.swift in Sources */,

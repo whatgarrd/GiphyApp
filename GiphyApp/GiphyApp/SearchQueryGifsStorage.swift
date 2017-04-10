@@ -6,7 +6,6 @@
 //  Copyright © 2017 Владислав Шарандин. All rights reserved.
 //
 
-import UIKit
 import SwiftyJSON
 
 class SearchQueryGifStorage {

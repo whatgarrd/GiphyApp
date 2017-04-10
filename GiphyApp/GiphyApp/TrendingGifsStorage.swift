@@ -6,8 +6,6 @@
 //  Copyright © 2017 Владислав Шарандин. All rights reserved.
 //
 
-import UIKit
-
 import SwiftyJSON
 
 class TrendingGifsStorage {
@@ -86,7 +84,7 @@ class TrendingGifsStorage {
         busy = false
     }
     
-    func isBusy() -> Bool{
+    func isBusy() -> Bool {
         return busy
     }
 }
