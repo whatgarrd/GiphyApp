@@ -74,7 +74,6 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
         tableView.register(GifContainerCell.self, forCellReuseIdentifier: forCellReuseIdentifier)
         
         // additional UI setup
-        UITableView.appearance().separatorColor = UIColor.white
         loadingGifsIndicator.hidesWhenStopped = true
         title = searchQuery
         
