@@ -26,7 +26,7 @@ class GifContainerCell: UITableViewCell {
             innerImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             innerImageView.leftAnchor.constraint(equalTo: self.leftAnchor),
             innerImageView.topAnchor.constraint(equalTo: self.topAnchor),
-            ])
+        ])
     }
     
     required init?(coder aDecoder: NSCoder) {

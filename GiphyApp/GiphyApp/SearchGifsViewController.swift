@@ -18,7 +18,7 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
     
     
     // we get it from the MainViewController
-    var searchQuery: String = "duke nukem"
+    var searchQuery: String = ""
     
     // object which have an array which stores trending gifs as GifObjects
     // also it performs updating of this array
@@ -30,7 +30,6 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
     let heightForFooterInSection: CGFloat = 30.0
     let trendedMarker: String = "trended!"
     let forCellReuseIdentifier: String = "Cell"
-    let placeholderName: String = "placeholder"
     
     override func loadView() {
         super.loadView()
@@ -48,7 +47,7 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             tableView.leftAnchor.constraint(equalTo: view.leftAnchor),
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            ])
+        ])
         
         tableView.allowsSelection = false
         
@@ -61,11 +60,9 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
         NSLayoutConstraint.activate([
             loadingGifsIndicator.centerXAnchor.constraint(equalTo: footerView.centerXAnchor),
             loadingGifsIndicator.centerYAnchor.constraint(equalTo: footerView.centerYAnchor)
-            ])
+        ])
     }
 
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -76,13 +73,12 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
         //register custom cell
         tableView.register(GifContainerCell.self, forCellReuseIdentifier: forCellReuseIdentifier)
         
-        // UI setup
-        UITableView.appearance().separatorColor = UIColor.black
+        // additional UI setup
+        UITableView.appearance().separatorColor = UIColor.white
         loadingGifsIndicator.hidesWhenStopped = true
         title = searchQuery
         
         // searchQueryGifStorage setup
-
         searchQueryGifStorage.setQuery(searchQuery)
         
         // first update
@@ -117,7 +113,6 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
         } else {
             return dummyFooterView
         }
-
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

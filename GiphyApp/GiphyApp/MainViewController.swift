@@ -22,10 +22,9 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     let heightForRowAt: CGFloat = 240.0
     let heightForFooterInSection: CGFloat = 30.0
     let titleString: String = "Trending"
-    let searchGifsSegueIdentifier: String = "Search"
     let forCellReuseIdentifier: String = "Cell"
-    let viewTopAnchorConst: CGFloat = 20.0
-    let viewBottomAnchorConst: CGFloat = 70.0
+
+    let searchBarBottomAnchorConst: CGFloat = 50.0
     
     // object which have an array which stores trending gifs as GifObjects
     // also it performs updating of this array
@@ -45,10 +44,10 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         //searchBar setup
         NSLayoutConstraint.activate([
-            searchBar.topAnchor.constraint(equalTo: view.topAnchor, constant: viewTopAnchorConst),
+            searchBar.topAnchor.constraint(equalTo: view.topAnchor),
             searchBar.leftAnchor.constraint(equalTo: view.leftAnchor),
             searchBar.rightAnchor.constraint(equalTo: view.rightAnchor),
-            searchBar.bottomAnchor.constraint(equalTo: view.topAnchor, constant: viewBottomAnchorConst)
+            searchBar.bottomAnchor.constraint(equalTo: view.topAnchor, constant: searchBarBottomAnchorConst)
             
         ])
         
@@ -86,7 +85,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.register(GifContainerCell.self, forCellReuseIdentifier: forCellReuseIdentifier)
 
         // additional UI setup
-        UITableView.appearance().separatorColor = UIColor.black
+        UITableView.appearance().separatorColor = UIColor.white
         loadingGifsIndicator.hidesWhenStopped = true
         title = titleString
         
@@ -169,16 +168,13 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         DispatchQueue.main.async() {
-            self.performSegue(withIdentifier: self.searchGifsSegueIdentifier, sender: self)
-        }
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == searchGifsSegueIdentifier {
-            let searchGifsViewController = segue.destination as! SearchGifsViewController
+            let searchGifsViewController = SearchGifsViewController()
+            
             if searchBar.text != nil {
                 searchGifsViewController.searchQuery = searchBar.text!
             }
+            
+            self.navigationController?.pushViewController(searchGifsViewController, animated: true)
         }
     }
 }
