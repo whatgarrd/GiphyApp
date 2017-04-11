@@ -17,13 +17,11 @@ class SearchQueryGifStorage {
     private var busy = false
     
     // giphy.com API parameters
-    private let limit: Int = 5
+    // after each update offset += updateSpeed
+    private let limit: Int = 25
     private var offset: Int = 0
     private var query: String = ""
     private var rating: String = "pg"
-    
-    // after each update offset += updateSpeed
-    private let updateSpeed: Int = 5
     
     func loadGifs(){
         self.busy = true
@@ -58,7 +56,9 @@ class SearchQueryGifStorage {
                 // everTrended parse
                 if let everTrendedJSON = json[everTrendedPath].string {
                     if everTrendedJSON != "1970-01-01 00:00:00" {
-                        everTrended = true
+                        if everTrendedJSON != "0000-00-00 00:00:00" {
+                            everTrended = true
+                        }
                     }
                     
                 } else {
@@ -79,7 +79,7 @@ class SearchQueryGifStorage {
             self.downloadGroup.leave()
             
             // API parameter update
-            self.offset += self.updateSpeed
+            self.offset += self.limit
         }
         task.resume()
         

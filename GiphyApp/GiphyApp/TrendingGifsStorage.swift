@@ -17,11 +17,9 @@ class TrendingGifsStorage {
     private var busy = false
     
     // giphy.com API parameters
-    private let limit: Int = 100
+    // after each update offset += limit
+    private let limit: Int = 25
     private var offset: Int = 0
-    
-    // after each update offset += updateSpeed
-    private let updateSpeed: Int = 5
     
     func loadGifs(){
         busy = true
@@ -55,7 +53,9 @@ class TrendingGifsStorage {
                 // everTrended parse
                 if let everTrendedJSON = json[everTrendedPath].string {
                     if(everTrendedJSON != "1970-01-01 00:00:00") {
-                        everTrended = true
+                        if everTrendedJSON != "0000-00-00 00:00:00"{
+                            everTrended = true
+                        }
                     }
                 } else {
                     print ("seems like everTrended parse had failed")
@@ -75,7 +75,7 @@ class TrendingGifsStorage {
             self.downloadGroup.leave()
             
             // API parameter update
-            self.offset += self.updateSpeed
+            self.offset += self.limit
         }
         task.resume()
         

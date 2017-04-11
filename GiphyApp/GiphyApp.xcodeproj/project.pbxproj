@@ -11,9 +11,7 @@
 		917573F728DAB41CBBBA9714 /* Pods_GiphyApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7083534164A91FA5C1C6146B /* Pods_GiphyApp.framework */; };
 		ED13F4091E65851F00E8E470 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED13F4081E65851F00E8E470 /* AppDelegate.swift */; };
 		ED13F40B1E65851F00E8E470 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED13F40A1E65851F00E8E470 /* MainViewController.swift */; };
-		ED13F40E1E65851F00E8E470 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ED13F40C1E65851F00E8E470 /* Main.storyboard */; };
 		ED13F4101E65851F00E8E470 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ED13F40F1E65851F00E8E470 /* Assets.xcassets */; };
-		ED13F4131E65851F00E8E470 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ED13F4111E65851F00E8E470 /* LaunchScreen.storyboard */; };
 		ED13F41B1E658AA400E8E470 /* GifObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED13F41A1E658AA400E8E470 /* GifObject.swift */; };
 		ED13F41D1E658AEA00E8E470 /* TrendingGifsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED13F41C1E658AEA00E8E470 /* TrendingGifsStorage.swift */; };
 		EDBE13561E65AA0900E847E7 /* SearchQueryGifsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDBE13551E65AA0900E847E7 /* SearchQueryGifsStorage.swift */; };
@@ -27,9 +25,7 @@
 		ED13F4051E65851F00E8E470 /* GiphyApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GiphyApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED13F4081E65851F00E8E470 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		ED13F40A1E65851F00E8E470 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
-		ED13F40D1E65851F00E8E470 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		ED13F40F1E65851F00E8E470 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		ED13F4121E65851F00E8E470 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ED13F4141E65851F00E8E470 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ED13F41A1E658AA400E8E470 /* GifObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GifObject.swift; sourceTree = "<group>"; };
 		ED13F41C1E658AEA00E8E470 /* TrendingGifsStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrendingGifsStorage.swift; sourceTree = "<group>"; };
@@ -95,9 +91,7 @@
 				EDBE13551E65AA0900E847E7 /* SearchQueryGifsStorage.swift */,
 				ED13F41A1E658AA400E8E470 /* GifObject.swift */,
 				ED13F41C1E658AEA00E8E470 /* TrendingGifsStorage.swift */,
-				ED13F40C1E65851F00E8E470 /* Main.storyboard */,
 				ED13F40F1E65851F00E8E470 /* Assets.xcassets */,
-				ED13F4111E65851F00E8E470 /* LaunchScreen.storyboard */,
 				ED13F4141E65851F00E8E470 /* Info.plist */,
 			);
 			path = GiphyApp;
@@ -165,9 +159,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ED13F4131E65851F00E8E470 /* LaunchScreen.storyboard in Resources */,
 				ED13F4101E65851F00E8E470 /* Assets.xcassets in Resources */,
-				ED13F40E1E65851F00E8E470 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,25 +229,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		ED13F40C1E65851F00E8E470 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				ED13F40D1E65851F00E8E470 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		ED13F4111E65851F00E8E470 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				ED13F4121E65851F00E8E470 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		ED13F4151E65851F00E8E470 /* Debug */ = {
@@ -356,6 +329,7 @@
 			baseConfigurationReference = 8C600A9D970177726366CA31 /* Pods-GiphyApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				INFOPLIST_FILE = GiphyApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -370,6 +344,7 @@
 			baseConfigurationReference = F293DFF3F5F369CB8B0CC99C /* Pods-GiphyApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				INFOPLIST_FILE = GiphyApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

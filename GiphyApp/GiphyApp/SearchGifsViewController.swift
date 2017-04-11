@@ -11,8 +11,11 @@ import NukeGifuPlugin
 
 class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var loadingGifsIndicator: UIActivityIndicatorView!
+    var tableView = UITableView()
+    var loadingGifsIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+    let footerView = UIView(frame: CGRect.zero)
+    let dummyFooterView = UIView(frame: CGRect.zero)
+    
     
     // we get it from the MainViewController
     var searchQuery: String = ""
@@ -27,8 +30,39 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
     let heightForFooterInSection: CGFloat = 30.0
     let trendedMarker: String = "trended!"
     let forCellReuseIdentifier: String = "Cell"
-    let placeholderName: String = "placeholder"
     
+    override func loadView() {
+        super.loadView()
+        
+        //preset
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        loadingGifsIndicator.translatesAutoresizingMaskIntoConstraints = false
+        
+        tableView.addSubview(loadingGifsIndicator)
+        view.addSubview(tableView)
+        
+        //tableView setup
+        NSLayoutConstraint.activate([
+            tableView.rightAnchor.constraint(equalTo: view.rightAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            tableView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+        ])
+        
+        tableView.allowsSelection = false
+        
+        //footerView setup
+        footerView.addSubview(loadingGifsIndicator)
+        
+        //loadingGifsIndicator setup
+        loadingGifsIndicator.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            loadingGifsIndicator.centerXAnchor.constraint(equalTo: footerView.centerXAnchor),
+            loadingGifsIndicator.centerYAnchor.constraint(equalTo: footerView.centerYAnchor)
+        ])
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -39,13 +73,11 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
         //register custom cell
         tableView.register(GifContainerCell.self, forCellReuseIdentifier: forCellReuseIdentifier)
         
-        // UI setup
-        UITableView.appearance().separatorColor = UIColor.black
+        // additional UI setup
         loadingGifsIndicator.hidesWhenStopped = true
         title = searchQuery
         
         // searchQueryGifStorage setup
-
         searchQueryGifStorage.setQuery(searchQuery)
         
         // first update
@@ -74,11 +106,12 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        // footer setup
-        let footerView = UIView()
-        footerView.backgroundColor = UIColor.white
-        
-        return footerView
+        //last section
+        if section == tableView.numberOfSections - 1 {
+            return footerView
+        } else {
+            return dummyFooterView
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
