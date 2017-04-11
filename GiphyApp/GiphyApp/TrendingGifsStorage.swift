@@ -17,11 +17,9 @@ class TrendingGifsStorage {
     private var busy = false
     
     // giphy.com API parameters
+    // after each update offset += limit
     private let limit: Int = 25
     private var offset: Int = 0
-    
-    // after each update offset += updateSpeed
-    private let updateSpeed: Int = 25
     
     func loadGifs(){
         busy = true
@@ -77,7 +75,7 @@ class TrendingGifsStorage {
             self.downloadGroup.leave()
             
             // API parameter update
-            self.offset += self.updateSpeed
+            self.offset += self.limit
         }
         task.resume()
         

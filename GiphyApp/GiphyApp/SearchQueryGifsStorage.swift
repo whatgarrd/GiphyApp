@@ -17,13 +17,11 @@ class SearchQueryGifStorage {
     private var busy = false
     
     // giphy.com API parameters
+    // after each update offset += updateSpeed
     private let limit: Int = 25
     private var offset: Int = 0
     private var query: String = ""
     private var rating: String = "pg"
-    
-    // after each update offset += updateSpeed
-    private let updateSpeed: Int = 25
     
     func loadGifs(){
         self.busy = true
@@ -81,7 +79,7 @@ class SearchQueryGifStorage {
             self.downloadGroup.leave()
             
             // API parameter update
-            self.offset += self.updateSpeed
+            self.offset += self.limit
         }
         task.resume()
         
