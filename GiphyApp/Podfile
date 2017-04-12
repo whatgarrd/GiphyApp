@@ -6,7 +6,5 @@ target 'GiphyApp' do
     pod 'Gifu'
     pod 'Nuke', '~> 5.0'
     pod 'Nuke-Gifu-Plugin'
-    pod 'Alamofire', '~> 4.4'
-    pod 'Nuke-Alamofire-Plugin'
 end
 

@@ -143,10 +143,9 @@ class GifStorage {
         }
     }
 
-    
     // query setup
     // replacing empty spaces with "+" character.
-    func setQuery(_ query: String){
+    func setQuery(_ query: String) {
         self.query = query.replacingOccurrences(of: " ", with: "+")
     }
 }
