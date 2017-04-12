@@ -22,7 +22,7 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
     
     // object which have an array which stores trending gifs as GifObjects
     // also it performs updating of this array
-    let searchQueryGifStorage = SearchQueryGifStorage()
+    let searchQueryGifStorage = GifStorage()
     
     // constants
     let numberOfRowsInSection: Int = 1
@@ -131,6 +131,7 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         // when we reach the bottom of the screen
         if tableView.contentOffset.y >= (tableView.contentSize.height - tableView.frame.size.height) {
+            // need it to decice to reload data reloadData() or not to reload
             if !searchQueryGifStorage.isBusy() {
                 updateGifs()
             }
@@ -152,7 +153,10 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
     func updateGifs(){
         DispatchQueue.global(qos: .background).async {
             self.indicatorStartSpinning()
-            self.searchQueryGifStorage.loadGifs()
+            
+            // "true" value means search query request, 
+            // "false" -- default value -- trending gifs request
+            self.searchQueryGifStorage.loadGifs(true)
             
             DispatchQueue.main.async() {
                 self.tableView.reloadData()

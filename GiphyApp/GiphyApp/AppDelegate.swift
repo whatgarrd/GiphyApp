@@ -15,16 +15,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
-        let tempWindow: UIWindow = UIWindow(frame: UIScreen.main.bounds)
-        
+        let window = UIWindow(frame: UIScreen.main.bounds)
         let mainController = MainViewController() as UIViewController
         let navigationController = UINavigationController(rootViewController: mainController)
         
         navigationController.navigationBar.isTranslucent = false
-        tempWindow.rootViewController = navigationController
-        tempWindow.makeKeyAndVisible()
         
-        self.window = tempWindow
+        window.rootViewController = navigationController
+        window.makeKeyAndVisible()
+        
+        self.window = window
         
         //additional GUI setup
         UITableView.appearance().separatorColor = UIColor.white

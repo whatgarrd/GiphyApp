@@ -23,12 +23,11 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     let heightForFooterInSection: CGFloat = 30.0
     let titleString: String = "Trending"
     let forCellReuseIdentifier: String = "Cell"
-
-    let searchBarBottomAnchorConst: CGFloat = 50.0
+    let searchBarBottomAnchor: CGFloat = 50.0
     
     // object which have an array which stores trending gifs as GifObjects
     // also it performs updating of this array
-    let trendingGifsStorage = TrendingGifsStorage()
+    let trendingGifStorage = GifStorage()
 
     override func loadView() {
         super.loadView()
@@ -47,7 +46,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             searchBar.topAnchor.constraint(equalTo: view.topAnchor),
             searchBar.leftAnchor.constraint(equalTo: view.leftAnchor),
             searchBar.rightAnchor.constraint(equalTo: view.rightAnchor),
-            searchBar.bottomAnchor.constraint(equalTo: view.topAnchor, constant: searchBarBottomAnchorConst)
+            searchBar.bottomAnchor.constraint(equalTo: view.topAnchor, constant: searchBarBottomAnchor)
             
         ])
         
@@ -98,7 +97,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func numberOfSections(in tableView: UITableView) -> Int {
         // array of UIImages in gifStorage
-        return trendingGifsStorage.gifObjectsArray.count
+        return trendingGifStorage.gifObjectsArray.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -107,7 +106,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: GifContainerCell = tableView.dequeueReusableCell(withIdentifier: forCellReuseIdentifier, for: indexPath) as! GifContainerCell
-        let urlString = trendingGifsStorage.gifObjectsArray[indexPath.section].URL
+        let urlString = trendingGifStorage.gifObjectsArray[indexPath.section].URL
         
         AnimatedImage.manager.loadImage(with: URL(string: urlString)!, into: cell.innerImageView)
 
@@ -134,7 +133,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     func updateGifs() {
         DispatchQueue.global(qos: .background).async {
             self.indicatorStartSpinning()
-            self.trendingGifsStorage.loadGifs()
+            self.trendingGifStorage.loadGifs()
             
             DispatchQueue.main.async() {
                 self.tableView.reloadData()
@@ -147,7 +146,8 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         // when we reach the bottom of the screen
         if tableView.contentOffset.y >= (tableView.contentSize.height - tableView.frame.size.height) {
-            if !trendingGifsStorage.isBusy() {
+            // need it to decice to reload data reloadData() or not to reload
+            if !trendingGifStorage.isBusy() {
                 updateGifs()
             }
         }

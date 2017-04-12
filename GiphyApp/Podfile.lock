@@ -1,23 +1,31 @@
 PODS:
+  - Alamofire (4.4.0)
   - Gifu (2.0.0)
   - Nuke (5.1)
+  - Nuke-Alamofire-Plugin (2.0):
+    - Alamofire (~> 4.0)
+    - Nuke (~> 5.0)
   - Nuke-Gifu-Plugin (1.0):
     - Gifu (~> 2.0)
     - Nuke (~> 5.0)
   - SwiftyJSON (3.1.4)
 
 DEPENDENCIES:
+  - Alamofire (~> 4.4)
   - Gifu
   - Nuke (~> 5.0)
+  - Nuke-Alamofire-Plugin
   - Nuke-Gifu-Plugin
   - SwiftyJSON
 
 SPEC CHECKSUMS:
+  Alamofire: dc44b1600b800eb63da6a19039a0083d62a6a62d
   Gifu: 56a4d8f1092399159fa32662aa2232158b48d8ac
   Nuke: 8ab71e77f6a54ff5fb697f93537c35f419bb01f7
+  Nuke-Alamofire-Plugin: 5a0c7b3acdfac2f26a81fa46cf153102f54a5ea0
   Nuke-Gifu-Plugin: 212968cf0c170a504a8ddf69806cf6c6aa2f40b4
   SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
 
-PODFILE CHECKSUM: 4eb602fbb79c340ea4a2d9f2d980f958e639a1b6
+PODFILE CHECKSUM: 6b8dc33b673376a4df8cd129a6a3bdb784d29e12
 
 COCOAPODS: 1.2.0
