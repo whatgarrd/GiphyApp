@@ -16,15 +16,11 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
     let footerView = UIView(frame: CGRect.zero)
     let dummyFooterView = UIView(frame: CGRect.zero)
     
-    
     // we get it from the MainViewController
     var searchQuery: String = ""
     
-    // object which have an array which stores trending gifs as GifObjects
-    // also it performs updating of this array
-    let searchQueryGifStorage = SearchQueryGifStorage()
+    let searchQueryGifStorage = GifStorage()
     
-    // constants
     let numberOfRowsInSection: Int = 1
     let heightForRowAt: CGFloat = 240.0
     let heightForFooterInSection: CGFloat = 30.0
@@ -34,14 +30,12 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
     override func loadView() {
         super.loadView()
         
-        //preset
         tableView.translatesAutoresizingMaskIntoConstraints = false
         loadingGifsIndicator.translatesAutoresizingMaskIntoConstraints = false
         
         tableView.addSubview(loadingGifsIndicator)
         view.addSubview(tableView)
         
-        //tableView setup
         NSLayoutConstraint.activate([
             tableView.rightAnchor.constraint(equalTo: view.rightAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -51,10 +45,8 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
         
         tableView.allowsSelection = false
         
-        //footerView setup
         footerView.addSubview(loadingGifsIndicator)
         
-        //loadingGifsIndicator setup
         loadingGifsIndicator.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
@@ -66,21 +58,16 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // tableView setup
         tableView.delegate = self
         tableView.dataSource = self
         
-        //register custom cell
         tableView.register(GifContainerCell.self, forCellReuseIdentifier: forCellReuseIdentifier)
         
-        // additional UI setup
         loadingGifsIndicator.hidesWhenStopped = true
         title = searchQuery
         
-        // searchQueryGifStorage setup
-        searchQueryGifStorage.setQuery(searchQuery)
+        searchQueryGifStorage.query = searchQuery
         
-        // first update
         updateGifs()
     }
     
@@ -89,8 +76,7 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        // array of UIImages in gifStorage
-        return searchQueryGifStorage.gifObjectsArray.count
+        return searchQueryGifStorage.gifObjects.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -106,7 +92,6 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        //last section
         if section == tableView.numberOfSections - 1 {
             return footerView
         } else {
@@ -116,7 +101,7 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: GifContainerCell = tableView.dequeueReusableCell(withIdentifier: forCellReuseIdentifier, for: indexPath) as! GifContainerCell
-        let urlString = searchQueryGifStorage.gifObjectsArray[indexPath.section].URL
+        let urlString = searchQueryGifStorage.gifObjects[indexPath.section].URL
         
         guard let imageURL = URL(string: urlString) else {
             return cell
@@ -125,7 +110,7 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
         AnimatedImage.manager.loadImage(with: imageURL, into: cell.innerImageView)
         
         // if ever trended
-        if searchQueryGifStorage.gifObjectsArray[indexPath.section].everTrended == true {
+        if searchQueryGifStorage.gifObjects[indexPath.section].everTrended == true {
             cell.textLabel?.text = trendedMarker
         }
 
@@ -135,7 +120,7 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         // when we reach the bottom of the screen
         if tableView.contentOffset.y >= (tableView.contentSize.height - tableView.frame.size.height) {
-            if !searchQueryGifStorage.isBusy() {
+            if !searchQueryGifStorage.isBusy {
                 updateGifs()
             }
         }
@@ -156,10 +141,11 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
     func updateGifs(){
         DispatchQueue.global(qos: .background).async {
             self.indicatorStartSpinning()
-            self.searchQueryGifStorage.loadGifs()
-            
-            DispatchQueue.main.async() {
-                self.tableView.reloadData()
+            if self.searchQueryGifStorage.loadGifs(true) {
+                DispatchQueue.main.async() {
+                    self.tableView.reloadData()
+                }
+                
             }
             
             self.indicatorStopSpinning()

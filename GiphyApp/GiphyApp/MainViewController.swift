@@ -23,17 +23,13 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     let heightForFooterInSection: CGFloat = 30.0
     let titleString: String = "Trending"
     let forCellReuseIdentifier: String = "Cell"
-
-    let searchBarBottomAnchorConst: CGFloat = 50.0
+    let searchBarBottomAnchor: CGFloat = 50.0
     
-    // object which have an array which stores trending gifs as GifObjects
-    // also it performs updating of this array
-    let trendingGifsStorage = TrendingGifsStorage()
+    let trendingGifStorage = GifStorage()
 
     override func loadView() {
         super.loadView()
         
-        //preset
         tableView.translatesAutoresizingMaskIntoConstraints = false
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         loadingGifsIndicator.translatesAutoresizingMaskIntoConstraints = false
@@ -42,16 +38,14 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.addSubview(loadingGifsIndicator)
         view.addSubview(tableView)
         
-        //searchBar setup
         NSLayoutConstraint.activate([
             searchBar.topAnchor.constraint(equalTo: view.topAnchor),
             searchBar.leftAnchor.constraint(equalTo: view.leftAnchor),
             searchBar.rightAnchor.constraint(equalTo: view.rightAnchor),
-            searchBar.bottomAnchor.constraint(equalTo: view.topAnchor, constant: searchBarBottomAnchorConst)
+            searchBar.bottomAnchor.constraint(equalTo: view.topAnchor, constant: searchBarBottomAnchor)
             
         ])
         
-        //tableView setup
         NSLayoutConstraint.activate([
             tableView.rightAnchor.constraint(equalTo: view.rightAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -61,10 +55,8 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         tableView.allowsSelection = false
         
-        //footerView setup
         footerView.addSubview(loadingGifsIndicator)
         
-        //loadingGifsIndicator setup
         loadingGifsIndicator.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
@@ -76,19 +68,15 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // tableView  and searchBar setup
         tableView.delegate = self
         tableView.dataSource = self
         searchBar.delegate = self
         
-        //register custom cell
         tableView.register(GifContainerCell.self, forCellReuseIdentifier: forCellReuseIdentifier)
 
-        // additional UI setup
         loadingGifsIndicator.hidesWhenStopped = true
         title = titleString
         
-        // first update
         updateGifs()
     }
 
@@ -97,8 +85,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        // array of UIImages in gifStorage
-        return trendingGifsStorage.gifObjectsArray.count
+        return trendingGifStorage.gifObjects.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -107,7 +94,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: GifContainerCell = tableView.dequeueReusableCell(withIdentifier: forCellReuseIdentifier, for: indexPath) as! GifContainerCell
-        let urlString = trendingGifsStorage.gifObjectsArray[indexPath.section].URL
+        let urlString = trendingGifStorage.gifObjects[indexPath.section].URL
         
         guard let imageURL = URL(string: urlString) else {
             return cell
@@ -127,7 +114,6 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        //last section
         if section == tableView.numberOfSections - 1 {
             return footerView
         } else {
@@ -138,12 +124,11 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     func updateGifs() {
         DispatchQueue.global(qos: .background).async {
             self.indicatorStartSpinning()
-            self.trendingGifsStorage.loadGifs()
-            
-            DispatchQueue.main.async() {
-                self.tableView.reloadData()
+            if self.trendingGifStorage.loadGifs() {
+                DispatchQueue.main.async() {
+                    self.tableView.reloadData()
+                }
             }
-            
             self.indicatorStopSpinning()
         }
     }
@@ -151,7 +136,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         // when we reach the bottom of the screen
         if tableView.contentOffset.y >= (tableView.contentSize.height - tableView.frame.size.height) {
-            if !trendingGifsStorage.isBusy() {
+            if !trendingGifStorage.isBusy {
                 updateGifs()
             }
         }
