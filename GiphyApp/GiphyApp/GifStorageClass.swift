@@ -11,11 +11,11 @@ import SwiftyJSON
 class GifStorage {
     
     // GifObject contains URL as url string and bool everTrended
-    var gifObjectsArray = [GifObject]()
+    var gifObjects = [GifObject]()
     
     // sync section
     let downloadGroup = DispatchGroup()
-    private var busy = false
+    private(set) var isBusy = false
     
     // giphy.com API parameters
     // after each update offset += limit
@@ -27,20 +27,20 @@ class GifStorage {
     private var rating: String = "pg"
     
     // default -- false -- goes for trending gifs parse
-    func loadGifs(_ isItSearchRequest: Bool = false) {
+    func loadGifs(_ isSearchRequest: Bool = false) {
         //prevent requests while busy
-        if busy {
+        if isBusy {
             print("Storage is busy, not right now.")
             return
         }
         
         // can't access method again from now on
-        busy = true
+        isBusy = true
         downloadGroup.enter()
         
-        // url value depends of isItSearchRequest value
+        // url value depends of isSearchRequest value
         // false means trending gifs, true -- gifs by search request
-        guard let url: URL = self.calculateURL(isItSearchRequest) else {
+        guard let url = self.calculateURL(isSearchRequest) else {
             return
         }
         
@@ -48,34 +48,19 @@ class GifStorage {
         getGifDataAsJSON(url) { json in
             if let json = json {
                 // and parse it
-                // here we fill gifObjectsArray
-                self.parseJSONToGifObjectsArray(json)
+                // here we fill gifObjects with new GifObjects
+                self.gifObjects += self.parseJSONToGifObjectsArray(json)
             }
-            
             // can access again
             self.downloadGroup.leave()
-            self.busy = false
+            self.isBusy = false
         }
 
         let _ = downloadGroup.wait(timeout: DispatchTime.distantFuture)
     }
     
-    func isBusy() -> Bool {
-        return busy
-    }
-    
     private func getGifDataAsJSON(_ url: URL, completionHandler: @escaping ((JSON?)->())) {
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
-            guard error == nil else {
-                print(error as Any)
-                return
-            }
-            
-            guard data != nil else {
-                print("Data is empty")
-                return
-            }
-            
             if data != nil {
                 // API parameter update
                 self.offset += self.limit
@@ -87,7 +72,10 @@ class GifStorage {
         task.resume()
     }
     
-    private func parseJSONToGifObjectsArray(_ JSONData: JSON) {
+    private func parseJSONToGifObjectsArray(_ json: JSON) -> [GifObject] {
+        
+        var parsedGifObjects = [GifObject]()
+        
         // Parsing JSON
         for counter in 0 ..< self.limit {
             var everTrended = false
@@ -96,7 +84,7 @@ class GifStorage {
             let urlPath: [JSONSubscriptType] = ["data", counter, "images", "fixed_width", "url"]
             
             // everTrended parse
-            if let everTrendedJSON = JSONData[everTrendedPath].string {
+            if let everTrendedJSON = json[everTrendedPath].string {
                 if(everTrendedJSON != "1970-01-01 00:00:00") {
                     if everTrendedJSON != "0000-00-00 00:00:00"{
                         everTrended = true
@@ -105,47 +93,50 @@ class GifStorage {
 
             } else {
                 print ("seems like everTrended parse had failed")
+                print ("next iteration..")
+                continue
             }
             
             // URL parse
-            if let url = JSONData[urlPath].string {
+            if let url = json[urlPath].string {
                 // creating and filling GifObject with parsed information
                 let justAnotherGifObject = GifObject(url, everTrended)
                 
                 // storing GifObject in array finally
-                self.gifObjectsArray.append(justAnotherGifObject)
+                parsedGifObjects.append(justAnotherGifObject)
                 
             } else {
                 print("seems like url parse had failed")
+                print ("next iteration..")
             }
         }
+        return parsedGifObjects
     }
-    
-    private func calculateURL(_ isItSearchRequest: Bool) -> URL? {
-        if  isItSearchRequest == false {
+    // if isSearchRequest == false -- asking for trending images
+    // if isSearchRequest == true -- asking with search request
+    private func calculateURL(_ isSearchRequest: Bool) -> URL? {
+        if  !isSearchRequest {
             // asking api.giphy.com for trending images / using public key
             guard let url = URL(string: "http://api.giphy.com/v1/stickers/trending?api_key=dc6zaTOxFJmzC&limit=\(limit)&offset=\(offset)")
                 else {
                     return nil
                 }
-            
             return url
 
         } else {
-            // if isItSearchRequest == true, actually
+            // if isSearchRequest == true, actually
             // asking for images with search queary / using public key still
             guard let url = URL(string: "http://api.giphy.com/v1/stickers/search?q=\(query)&api_key=dc6zaTOxFJmzC&limit=\(limit)&offset=\(offset)&rating=\(rating)")
                 else {
                     return nil
                 }
-            
             return url
         }
     }
 
-    // query setup
+    // search query setup
     // replacing empty spaces with "+" character.
-    func setQuery(_ query: String) {
+    func setSearchQuery(_ query: String) {
         self.query = query.replacingOccurrences(of: " ", with: "+")
     }
 }

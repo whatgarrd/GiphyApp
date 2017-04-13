@@ -78,7 +78,7 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
         title = searchQuery
         
         // searchQueryGifStorage setup
-        searchQueryGifStorage.setQuery(searchQuery)
+        searchQueryGifStorage.setSearchQuery(searchQuery)
         
         // first update
         updateGifs()
@@ -90,7 +90,7 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func numberOfSections(in tableView: UITableView) -> Int {
         // array of UIImages in gifStorage
-        return searchQueryGifStorage.gifObjectsArray.count
+        return searchQueryGifStorage.gifObjects.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -116,12 +116,12 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: GifContainerCell = tableView.dequeueReusableCell(withIdentifier: forCellReuseIdentifier, for: indexPath) as! GifContainerCell
-        let urlString = searchQueryGifStorage.gifObjectsArray[indexPath.section].URL
+        let urlString = searchQueryGifStorage.gifObjects[indexPath.section].URL
         
         AnimatedImage.manager.loadImage(with: URL(string: urlString)!, into: cell.innerImageView)
         
         // if ever trended
-        if searchQueryGifStorage.gifObjectsArray[indexPath.section].everTrended == true {
+        if searchQueryGifStorage.gifObjects[indexPath.section].everTrended == true {
             cell.textLabel?.text = trendedMarker
         }
 
@@ -132,7 +132,7 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
         // when we reach the bottom of the screen
         if tableView.contentOffset.y >= (tableView.contentSize.height - tableView.frame.size.height) {
             // need it to decice to reload data reloadData() or not to reload
-            if !searchQueryGifStorage.isBusy() {
+            if !searchQueryGifStorage.isBusy {
                 updateGifs()
             }
         }

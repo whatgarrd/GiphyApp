@@ -97,7 +97,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func numberOfSections(in tableView: UITableView) -> Int {
         // array of UIImages in gifStorage
-        return trendingGifStorage.gifObjectsArray.count
+        return trendingGifStorage.gifObjects.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -106,7 +106,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: GifContainerCell = tableView.dequeueReusableCell(withIdentifier: forCellReuseIdentifier, for: indexPath) as! GifContainerCell
-        let urlString = trendingGifStorage.gifObjectsArray[indexPath.section].URL
+        let urlString = trendingGifStorage.gifObjects[indexPath.section].URL
         
         AnimatedImage.manager.loadImage(with: URL(string: urlString)!, into: cell.innerImageView)
 
@@ -147,7 +147,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         // when we reach the bottom of the screen
         if tableView.contentOffset.y >= (tableView.contentSize.height - tableView.frame.size.height) {
             // need it to decice to reload data reloadData() or not to reload
-            if !trendingGifStorage.isBusy() {
+            if !trendingGifStorage.isBusy {
                 updateGifs()
             }
         }
