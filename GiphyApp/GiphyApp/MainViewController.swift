@@ -25,14 +25,11 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     let forCellReuseIdentifier: String = "Cell"
     let searchBarBottomAnchor: CGFloat = 50.0
     
-    // object which have an array which stores trending gifs as GifObjects
-    // also it performs updating of this array
     let trendingGifStorage = GifStorage()
 
     override func loadView() {
         super.loadView()
         
-        //preset
         tableView.translatesAutoresizingMaskIntoConstraints = false
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         loadingGifsIndicator.translatesAutoresizingMaskIntoConstraints = false
@@ -41,7 +38,6 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.addSubview(loadingGifsIndicator)
         view.addSubview(tableView)
         
-        //searchBar setup
         NSLayoutConstraint.activate([
             searchBar.topAnchor.constraint(equalTo: view.topAnchor),
             searchBar.leftAnchor.constraint(equalTo: view.leftAnchor),
@@ -50,7 +46,6 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             
         ])
         
-        //tableView setup
         NSLayoutConstraint.activate([
             tableView.rightAnchor.constraint(equalTo: view.rightAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -60,10 +55,8 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         tableView.allowsSelection = false
         
-        //footerView setup
         footerView.addSubview(loadingGifsIndicator)
         
-        //loadingGifsIndicator setup
         loadingGifsIndicator.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
@@ -75,19 +68,15 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // tableView  and searchBar setup
         tableView.delegate = self
         tableView.dataSource = self
         searchBar.delegate = self
         
-        //register custom cell
         tableView.register(GifContainerCell.self, forCellReuseIdentifier: forCellReuseIdentifier)
 
-        // additional UI setup
         loadingGifsIndicator.hidesWhenStopped = true
         title = titleString
         
-        // first update
         updateGifs()
     }
 
@@ -96,7 +85,6 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        // array of UIImages in gifStorage
         return trendingGifStorage.gifObjects.count
     }
     
@@ -122,7 +110,6 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        //last section
         if section == tableView.numberOfSections - 1 {
             return footerView
         } else {
@@ -133,12 +120,11 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     func updateGifs() {
         DispatchQueue.global(qos: .background).async {
             self.indicatorStartSpinning()
-            self.trendingGifStorage.loadGifs()
-            
-            DispatchQueue.main.async() {
-                self.tableView.reloadData()
+            if self.trendingGifStorage.loadGifs() {
+                DispatchQueue.main.async() {
+                    self.tableView.reloadData()
+                }
             }
-            
             self.indicatorStopSpinning()
         }
     }
@@ -146,7 +132,6 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         // when we reach the bottom of the screen
         if tableView.contentOffset.y >= (tableView.contentSize.height - tableView.frame.size.height) {
-            // need it to decice to reload data reloadData() or not to reload
             if !trendingGifStorage.isBusy {
                 updateGifs()
             }
