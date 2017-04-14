@@ -120,9 +120,7 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         // when we reach the bottom of the screen
         if tableView.contentOffset.y >= (tableView.contentSize.height - tableView.frame.size.height) {
-            if !searchQueryGifStorage.isBusy {
                 updateGifs()
-            }
         }
     }
     
@@ -139,16 +137,14 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func updateGifs(){
-        DispatchQueue.global(qos: .background).async {
-            self.indicatorStartSpinning()
-            if self.searchQueryGifStorage.loadGifs(true) {
+        self.indicatorStartSpinning()
+        if !searchQueryGifStorage.isBusy{
+            self.searchQueryGifStorage.loadGifs(true) { success in
                 DispatchQueue.main.async() {
                     self.tableView.reloadData()
                 }
-                
+                self.indicatorStopSpinning()
             }
-            
-            self.indicatorStopSpinning()
         }
     }
 }

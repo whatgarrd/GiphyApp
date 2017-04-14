@@ -17,15 +17,17 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     let footerView = UIView(frame: CGRect.zero)
     let dummyFooterView = UIView(frame: CGRect.zero)
     
-    // constants
-    let numberOfRowsInSection: Int = 1
+    // Constants
+    let numberOfRowsInSection = 1
     let heightForRowAt: CGFloat = 240.0
     let heightForFooterInSection: CGFloat = 30.0
-    let titleString: String = "Trending"
-    let forCellReuseIdentifier: String = "Cell"
+    let titleString = "Trending"
+    let forCellReuseIdentifier = "Cell"
     let searchBarBottomAnchor: CGFloat = 50.0
     
     let trendingGifStorage = GifStorage()
+    
+    var indicatorCounter = 0
 
     override func loadView() {
         super.loadView()
@@ -35,7 +37,6 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         loadingGifsIndicator.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(searchBar)
-        tableView.addSubview(loadingGifsIndicator)
         view.addSubview(tableView)
         
         NSLayoutConstraint.activate([
@@ -54,10 +55,9 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         ])
         
         tableView.allowsSelection = false
+        tableView.keyboardDismissMode = .onDrag
         
         footerView.addSubview(loadingGifsIndicator)
-        
-        loadingGifsIndicator.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             loadingGifsIndicator.centerXAnchor.constraint(equalTo: footerView.centerXAnchor),
@@ -96,12 +96,10 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cell: GifContainerCell = tableView.dequeueReusableCell(withIdentifier: forCellReuseIdentifier, for: indexPath) as! GifContainerCell
         let urlString = trendingGifStorage.gifObjects[indexPath.section].URL
         
-        guard let imageURL = URL(string: urlString) else {
-            return cell
+        if let imageURL = URL(string: urlString) {
+            AnimatedImage.manager.loadImage(with: imageURL, into: cell.innerImageView)
         }
         
-        AnimatedImage.manager.loadImage(with: imageURL, into: cell.innerImageView)
-
         return cell
     }
     
@@ -122,23 +120,21 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
 
     func updateGifs() {
-        DispatchQueue.global(qos: .background).async {
-            self.indicatorStartSpinning()
-            if self.trendingGifStorage.loadGifs() {
+        self.indicatorStartSpinning()
+        if !trendingGifStorage.isBusy{
+            trendingGifStorage.loadGifs() { success in
                 DispatchQueue.main.async() {
                     self.tableView.reloadData()
                 }
+                self.indicatorStopSpinning()
             }
-            self.indicatorStopSpinning()
         }
     }
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         // when we reach the bottom of the screen
         if tableView.contentOffset.y >= (tableView.contentSize.height - tableView.frame.size.height) {
-            if !trendingGifStorage.isBusy {
                 updateGifs()
-            }
         }
     }
     
@@ -158,8 +154,8 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         DispatchQueue.main.async() {
             let searchGifsViewController = SearchGifsViewController()
             
-            if searchBar.text != nil {
-                searchGifsViewController.searchQuery = searchBar.text!
+            if let searchBarText = searchBar.text {
+                searchGifsViewController.searchQuery = searchBarText
             }
             
             self.navigationController?.pushViewController(searchGifsViewController, animated: true)

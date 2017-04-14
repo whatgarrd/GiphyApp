@@ -12,12 +12,11 @@ class GifStorage {
     
     var gifObjects = [GifObject]()
     
-    let downloadGroup = DispatchGroup()
-    private(set) var isBusy = false
+     private(set) var isBusy = false
     
     // giphy.com API parameters
     // after each update offset += limit
-    private let limit: Int = 25
+    private let limit: Int = 1
     private var offset: Int = 0
     
     // additional parameters go for search request
@@ -35,33 +34,36 @@ class GifStorage {
     
     private var rating: String = "pg"
     
-    func loadGifs(_ isSearchRequest: Bool = false) -> Bool {
-        if isBusy {
-            return false
+    func loadGifs(_ isSearchRequest: Bool = false, completionHandler: @escaping ((_ success: Bool) -> Void)) {
+        guard !isBusy else {
+            completionHandler(false)
+            return
         }
         
-        isBusy = true
-        downloadGroup.enter()
+        self.isBusy = true
         
-        guard let url = self.calculateURL(isSearchRequest) else {
-            return false
-        }
-        
-        getGifDataAsJSON(url) { json in
-            if let json = json {
-                self.gifObjects += self.parseJSONToGifObjectsArray(json)
+        DispatchQueue.global(qos: .background).async {
+            guard let url = self.calculateURL(isSearchRequest) else {
+                completionHandler(false)
+                return
             }
-
-            self.downloadGroup.leave()
-            self.isBusy = false
+            
+            self.getGifDataAsJSON(url) { json in
+                if let json = json {
+                    self.gifObjects += self.parseJSONToGifObjectsArray(json)
+                    completionHandler(true)
+                } else {
+                    completionHandler(false)
+                }
+                
+                self.isBusy = false
+            }
         }
-
-        let _ = downloadGroup.wait(timeout: DispatchTime.distantFuture)
         
-        return true
     }
     
     private func getGifDataAsJSON(_ url: URL, completionHandler: @escaping ((JSON?)->())) {
+        
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             
             guard error == nil else {
@@ -70,7 +72,6 @@ class GifStorage {
             
             if data != nil {
                 self.offset += self.limit
-                
                 completionHandler(JSON(data as Any))
             }
         }
