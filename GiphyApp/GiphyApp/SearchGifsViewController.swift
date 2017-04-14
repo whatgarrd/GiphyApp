@@ -140,8 +140,10 @@ class SearchGifsViewController: UIViewController, UITableViewDelegate, UITableVi
         self.indicatorStartSpinning()
         if !searchQueryGifStorage.isBusy{
             self.searchQueryGifStorage.loadGifs(true) { success in
-                DispatchQueue.main.async() {
-                    self.tableView.reloadData()
+                if success {
+                    DispatchQueue.main.async() {
+                        self.tableView.reloadData()
+                    }
                 }
                 self.indicatorStopSpinning()
             }

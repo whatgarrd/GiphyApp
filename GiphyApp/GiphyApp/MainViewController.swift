@@ -123,8 +123,11 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.indicatorStartSpinning()
         if !trendingGifStorage.isBusy{
             trendingGifStorage.loadGifs() { success in
-                DispatchQueue.main.async() {
-                    self.tableView.reloadData()
+                
+                if success {
+                    DispatchQueue.main.async() {
+                        self.tableView.reloadData()
+                    }
                 }
                 self.indicatorStopSpinning()
             }

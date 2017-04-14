@@ -16,7 +16,7 @@ class GifStorage {
     
     // giphy.com API parameters
     // after each update offset += limit
-    private let limit: Int = 1
+    private let limit: Int = 25
     private var offset: Int = 0
     
     // additional parameters go for search request
