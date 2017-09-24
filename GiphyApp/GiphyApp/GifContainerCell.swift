@@ -1,5 +1,5 @@
 //
-//  CustomCellClass.swift
+//  GifContainerCell.swift
 //  GiphyApp
 //
 //  Created by Sharandin, Vladislav on 4/4/17.
